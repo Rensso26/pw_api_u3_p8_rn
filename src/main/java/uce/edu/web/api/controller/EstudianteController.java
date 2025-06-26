@@ -1,11 +1,12 @@
 package uce.edu.web.api.controller;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.*;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import uce.edu.web.api.repository.modelo.Estudiante;
 import uce.edu.web.api.service.IEstudianteService;
+
+import java.util.List;
 
 @Path("/estudiantes")
 public class EstudianteController {
@@ -14,8 +15,37 @@ public class EstudianteController {
     private IEstudianteService estudianteService;
 
     @GET
-    @Path("/consultar/{id}")
+    @Path("/{id}")
     public Estudiante consultarPorIP(@PathParam("id") Integer id){
         return this.estudianteService.buscarPorId(id);
     }
+
+    @GET
+    @Path("")
+    public List<Estudiante> consultarTodos(){
+    return this.estudianteService.buscarTodos();
+    }
+    @POST
+    @Path("")
+    public void guardar(@RequestBody Estudiante estudiante){
+
+    }
+    @PUT
+    @Path("/{id}")
+    public void actualizar(@RequestBody Estudiante estudiante, @PathParam("id") Integer id){
+
+    }
+
+    @PATCH
+    @Path("/{id}")
+    public void actualizarParcialPorId(@RequestBody Estudiante estudiante, @PathParam("id") Integer id){
+
+    }
+    @DELETE
+    @Path("/{id}")
+    public void borrarPorId(@PathParam("id") Integer id){
+
+    }
+
+
 }
