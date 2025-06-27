@@ -8,4 +8,8 @@ public interface IEstudianteService {
 
     public Estudiante buscarPorId(Integer id);
     public List<Estudiante> buscarTodos();
+    public void actualizar(Estudiante estudiante);
+    public void actualizarParcial(Estudiante estudiante);
+    public void borrarPorId(Integer id);
+    public void guardar(Estudiante estudiante);
 }

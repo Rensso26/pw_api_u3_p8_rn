@@ -11,7 +11,7 @@ import java.util.List;
 
 @Transactional
 @ApplicationScoped
-public class EstudianteRepoImpl implements IEstudianteRepo{
+public class EstudianteRepoImpl implements IEstudianteRepo {
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -25,5 +25,25 @@ public class EstudianteRepoImpl implements IEstudianteRepo{
     public List<Estudiante> seleccionarTodos() {
         TypedQuery<Estudiante> myQuery = this.entityManager.createQuery("SELECT e FROM Estudiante e", Estudiante.class);
         return myQuery.getResultList();
+    }
+
+    @Override
+    public void actualizar(Estudiante estudiante) {
+        this.entityManager.merge(estudiante);
+    }
+
+    @Override
+    public void actualizarParcial(Estudiante estudiante) {
+        this.entityManager.merge(estudiante);
+    }
+
+    @Override
+    public void borrarPorId(Integer id) {
+        this.entityManager.remove(this.seleccionarPorId(id));
+    }
+
+    @Override
+    public void insertar(Estudiante estudiante) {
+        this.entityManager.persist(estudiante);
     }
 }
