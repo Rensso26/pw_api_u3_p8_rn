@@ -28,22 +28,40 @@ public class ProfesorController {
     @POST
     @Path("")
     public void guardar(@RequestBody Profesor profesor){
-
+        this.profesorService.guardar(profesor);
     }
     @PUT
     @Path("/{id}")
     public void actualizar(@RequestBody Profesor profesor, @PathParam("id") Integer id){
-
+        profesor.setId(id);
+        this.profesorService.actualizar(profesor);
     }
 
     @PATCH
     @Path("/{id}")
     public void actualizarParcialPorId(@RequestBody Profesor profesor, @PathParam("id") Integer id){
-
+        profesor.setId(id);
+        Profesor e = this.profesorService.buscarPorId(id);
+        if (profesor.getApellido() != null){
+            e.setApellido(profesor.getApellido());
+        }
+        if (profesor.getNombre() != null){
+            e.setNombre(profesor.getNombre());
+        }
+        if (profesor.getClsaes() != null){
+            e.setClsaes(profesor.getClsaes());
+        }
+        if (profesor.getFacultad() != null){
+            e.setFacultad(profesor.getFacultad());
+        }
+        if (profesor.getnHijos() != null){
+            e.setnHijos(profesor.getnHijos());
+        }
+        this.profesorService.actualizar(e);
     }
     @DELETE
     @Path("/{id}")
     public void borrarPorId(@PathParam("id") Integer id){
-
+        this.profesorService.borrarPorId(id);
     }
 }
