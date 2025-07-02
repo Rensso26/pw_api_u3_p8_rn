@@ -7,7 +7,7 @@ import java.util.List;
 public interface IEstudianteService {
 
     public Estudiante buscarPorId(Integer id);
-    public List<Estudiante> buscarTodos();
+    public List<Estudiante> buscarTodos(String genero);
     public void actualizar(Estudiante estudiante);
     public void actualizarParcial(Estudiante estudiante);
     public void borrarPorId(Integer id);
