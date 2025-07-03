@@ -1,6 +1,7 @@
 package uce.edu.web.api.repository.modelo;
 
 import jakarta.persistence.*;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import java.time.LocalDateTime;
 
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 public class Estudiante {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "estu_id")
     private Integer id;
 
@@ -57,6 +58,7 @@ public class Estudiante {
         this.apellido = apellido;
     }
 
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     public LocalDateTime getFechaNacimiento() {
         return fechaNacimiento;
     }
