@@ -31,6 +31,17 @@ public class Profesor {
     @Column(name = "prof_num_hijos")
     private Integer nHijos;
 
+    @Column(name = "prof_genero")
+    private String genero;
+
+    public String getGenero() {
+        return genero;
+    }
+
+    public void setGenero(String genero) {
+        this.genero = genero;
+    }
+
     public Integer getId() {
         return id;
     }

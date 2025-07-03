@@ -3,6 +3,9 @@ package uce.edu.web.api.controller;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import uce.edu.web.api.repository.modelo.Profesor;
 import uce.edu.web.api.service.IProfesorService;
@@ -17,29 +20,46 @@ public class ProfesorController {
 
     @GET
     @Path("/{id}")
-    public Profesor consultarPorIP(@PathParam("id") Integer id){
-        return this.profesorService.buscarPorId(id);
+    @Operation(summary = "Consultar un Profesor", description = "Consulta un profesor mediante su ID")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_XML)
+    public Response consultarPorIP(@PathParam("id") Integer id){
+        return Response.status(227).entity(this.profesorService.buscarPorId(id)).build() ;
     }
     @GET
     @Path("")
-    public List<Profesor> consultarTodos(){
-        return this.profesorService.buscarTodos();
+    @Operation(summary = "Consultar Profesores", description = "Consulta todos los profesores")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response consultarTodos(@QueryParam("genero") String genero,
+                                         @QueryParam("provincia") String provincia){
+        System.out.println(provincia);
+        return Response.status(227).entity(this.profesorService.buscarTodos(genero)).build() ;
     }
     @POST
     @Path("")
-    public void guardar(@RequestBody Profesor profesor){
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response guardar(@RequestBody Profesor profesor){
         this.profesorService.guardar(profesor);
+        return Response.status(227).build();
     }
+
     @PUT
     @Path("/{id}")
-    public void actualizar(@RequestBody Profesor profesor, @PathParam("id") Integer id){
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response actualizar(@RequestBody Profesor profesor, @PathParam("id") Integer id){
         profesor.setId(id);
         this.profesorService.actualizar(profesor);
+        return Response.status(227).build();
     }
 
     @PATCH
     @Path("/{id}")
-    public void actualizarParcialPorId(@RequestBody Profesor profesor, @PathParam("id") Integer id){
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response actualizarParcialPorId(@RequestBody Profesor profesor, @PathParam("id") Integer id){
         profesor.setId(id);
         Profesor e = this.profesorService.buscarPorId(id);
         if (profesor.getApellido() != null){
@@ -58,10 +78,14 @@ public class ProfesorController {
             e.setnHijos(profesor.getnHijos());
         }
         this.profesorService.actualizar(e);
+        return Response.status(227).build();
     }
     @DELETE
     @Path("/{id}")
-    public void borrarPorId(@PathParam("id") Integer id){
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response borrarPorId(@PathParam("id") Integer id){
         this.profesorService.borrarPorId(id);
+        return Response.status(227).build();
     }
 }
