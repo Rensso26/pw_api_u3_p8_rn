@@ -1,12 +1,14 @@
 package uce.edu.web.api.service;
 
+import jakarta.ws.rs.core.UriInfo;
 import uce.edu.web.api.repository.modelo.Profesor;
+import uce.edu.web.api.service.to.ProfesorTo;
 
 import java.util.List;
 
 public interface IProfesorService {
 
-    public Profesor buscarPorId(Integer id);
+    public ProfesorTo buscarPorId(Integer id, UriInfo uriInfo);
     public List<Profesor> buscarTodos(String genero);
     public void actualizar(Profesor profesor);
     public void actualizarParcial(Profesor profesor);
