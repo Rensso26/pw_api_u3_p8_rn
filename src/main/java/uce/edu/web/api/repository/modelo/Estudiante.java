@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "estudiante")
@@ -25,6 +26,9 @@ public class Estudiante {
 
     @Column(name = "estu_genero")
     private String genero;
+
+    @OneToMany(mappedBy = "estudiante")
+    private List<Hijo> hijos;
 
     public String getGenero() {
         return genero;
