@@ -13,7 +13,9 @@ import uce.edu.web.api.repository.modelo.Hijo;
 import uce.edu.web.api.service.HijoService;
 import uce.edu.web.api.service.IEstudianteService;
 import uce.edu.web.api.service.mapper.EstudianteMapper;
+import uce.edu.web.api.service.mapper.HijoMapper;
 import uce.edu.web.api.service.to.EstudianteTo;
+import uce.edu.web.api.service.to.HijoTo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,50 +49,55 @@ public class EstudianteController {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response consultarTodos(@QueryParam("genero") String genero,
-                                           @QueryParam("provincia") String provincia){
+                                           @QueryParam("provincia") String provincia, @Context UriInfo uriInfo){
+        List<EstudianteTo> estuList = EstudianteMapper.toListTO(this.estudianteService.buscarTodos(genero));
         System.out.println(provincia);
-        return Response.status(Response.Status.ACCEPTED).entity(this.estudianteService.buscarTodos(genero)).build();
-
+        return Response.status(Response.Status.ACCEPTED).entity(estuList).build();
     }
+
     @POST
     @Path("")
     @Operation(
     )
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response guardar(@RequestBody Estudiante estudiante){
-    this.estudianteService.guardar(estudiante);
-        return Response.status(Response.Status.ACCEPTED).build();
+    public Response guardar(@RequestBody EstudianteTo estudianteTo){
+        Estudiante estudiante = EstudianteMapper.ToEntity(estudianteTo);
+        this.estudianteService.guardar(estudiante);
+        return Response.status(Response.Status.CREATED).build();
     }
+
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response actualizar(@RequestBody Estudiante estudiante, @PathParam("id") Integer id){
-        estudiante.setId(id);
+    public Response actualizar(@RequestBody EstudianteTo estudianteTo, @PathParam("id") Integer id){
+        estudianteTo.setId(id);
+        Estudiante estudiante = EstudianteMapper.ToEntity(estudianteTo);
         this.estudianteService.actualizar(estudiante);
         return Response.status(Response.Status.OK).build();
     }
 
-//    @PATCH
-//    @Path("/{id}")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response actualizarParcialPorId(@RequestBody Estudiante estudiante, @PathParam("id") Integer id, @Context UriInfo uriInfo){
-//        estudiante.setId(id);
-//        Estudiante e = this.estudianteService.buscarPorId(id,);
-//        if (estudiante.getApellido() != null){
-//            e.setApellido(estudiante.getApellido());
-//        }
-//        if (estudiante.getNombre() != null){
-//            e.setNombre(estudiante.getNombre());
-//        }
-//        if (estudiante.getFechaNacimiento() != null){
-//            e.setFechaNacimiento(estudiante.getFechaNacimiento());
-//        }
-//        this.estudianteService.actualizarParcial(e);
-//        return Response.status(Response.Status.OK).build();
-//    }
+    @PATCH
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response actualizarParcialPorId(@RequestBody EstudianteTo estudianteTo, @PathParam("id") Integer id, @Context UriInfo uriInfo){
+        Estudiante estudiante = this.estudianteService.buscarPorId(id);
+
+        if (estudiante.getApellido() != null){
+            estudiante.setApellido(estudianteTo.getApellido());
+        }
+        if (estudiante.getNombre() != null){
+            estudiante.setNombre(estudianteTo.getNombre());
+        }
+        if (estudiante.getFechaNacimiento() != null){
+            estudiante.setFechaNacimiento(estudianteTo.getFechaNacimiento());
+        }
+        this.estudianteService.actualizarParcial(estudiante);
+        return Response.status(Response.Status.OK).build();
+    }
+
     @DELETE
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -102,8 +109,9 @@ public class EstudianteController {
 
     @GET
     @Path("/{id}/hijos")
-    public List<Hijo> obtenerHijosPorID(@PathParam("id") Integer id){
-       return this.hijoService.buscarPorEstudianteId(id);
+    public Response obtenerHijosPorID(@PathParam("id") Integer id){
+       List<HijoTo> hijos = HijoMapper.toListTO(this.hijoService.buscarPorEstudianteId(id));
+        return Response.status(Response.Status.OK).entity(hijos).build();
     }
 
 }
