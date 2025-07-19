@@ -1,15 +1,18 @@
 package uce.edu.web.api.controller;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
+import org.eclipse.microprofile.jwt.Claim;
+import org.eclipse.microprofile.jwt.ClaimValue;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import uce.edu.web.api.repository.modelo.Estudiante;
-import uce.edu.web.api.repository.modelo.Hijo;
 import uce.edu.web.api.service.HijoService;
 import uce.edu.web.api.service.IEstudianteService;
 import uce.edu.web.api.service.mapper.EstudianteMapper;
@@ -19,9 +22,19 @@ import uce.edu.web.api.service.to.HijoTo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/estudiantes")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class EstudianteController {
+
+    @Inject
+    JsonWebToken jwt;
+
+    @Inject
+    @Claim("sub")
+    ClaimValue<String> subject;
 
     @Inject
     private HijoService hijoService;
@@ -31,6 +44,7 @@ public class EstudianteController {
 
     @GET
     @Path("/{id}")
+    @RolesAllowed("admin")
     @Operation(summary = "Consultar un Estudiante", description = "Consulta un estudiante mediante su ID")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -50,7 +64,7 @@ public class EstudianteController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response consultarTodos(@QueryParam("genero") String genero,
                                            @QueryParam("provincia") String provincia, @Context UriInfo uriInfo){
-        List<EstudianteTo> estuList = EstudianteMapper.toListTO(this.estudianteService.buscarTodos(genero));
+        List<EstudianteTo> estuList = this.estudianteService.buscarTodos(genero).stream().map(EstudianteMapper::toTO).collect(Collectors.toList());
         System.out.println(provincia);
         return Response.status(Response.Status.ACCEPTED).entity(estuList).build();
     }

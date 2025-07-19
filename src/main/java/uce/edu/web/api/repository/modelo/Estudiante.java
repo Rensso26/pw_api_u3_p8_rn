@@ -27,7 +27,7 @@ public class Estudiante {
     @Column(name = "estu_genero")
     private String genero;
 
-    @OneToMany(mappedBy = "estudiante")
+    @OneToMany(mappedBy = "estudiante", cascade = CascadeType.ALL)
     private List<Hijo> hijos;
 
     public String getGenero() {
