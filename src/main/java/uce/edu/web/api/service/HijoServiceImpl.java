@@ -12,6 +12,7 @@ public class HijoServiceImpl implements HijoService {
 
   @Inject
   private IHijoRepo hijoRepo;
+  //probando credenciales
 
   @Override
   public List<Hijo> buscarPorEstudianteId(Integer id) {

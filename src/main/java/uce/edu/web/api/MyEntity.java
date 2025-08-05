@@ -11,7 +11,7 @@ import jakarta.persistence.Id;
  *
  * {@code
  *     @Inject
- *     EntityManager em;
+ *     EntityManager em;vadsdsa
  *
  *     public void doSomething() {
  *         MyEntity entity1 = new MyEntity();
